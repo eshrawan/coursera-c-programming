@@ -16,15 +16,53 @@ int max (int a, int b) {
 }
 
 //Declare your rectangle structure here!
-
+typedef struct rect{
+  int x;
+  int y;
+  int width;
+  int height;
+} rectangle;
 
 rectangle canonicalize(rectangle r) {
-  //WRITE THIS FUNCTION
+  //Change negative width and heights to positive
+  //while adjusting x or y as applicable
+  if (r.width < 0) {
+    r.x += r.width;
+    r.width *= -1;
+  }
+  if (r.height < 0) {
+    r.y += r.height;
+    r.height *= -1;
+  }
   return r;
 }
+
 rectangle intersection(rectangle r1, rectangle r2) {
-  //WRITE THIS FUNCTION
-  return r1;
+  //Find the intersection of two rectangles
+  rectangle in_rect;
+
+  // Canonicalize inputs
+  r1 = canonicalize(r1);
+  r2 = canonicalize(r2);
+
+  // Return None is impossible to intersect
+  if (((r1.x + r1.width < r2.x) || (r2.x + r2.width < r1.x))
+      || ((r1.y + r1.height < r2.y) || (r2.y + r2.height < r1.y))) {
+    // Just give all zeros
+    in_rect.x = 0;
+    in_rect.y = 0;
+    in_rect.width = 0;
+    in_rect.height = 0;
+
+    return in_rect;
+  }
+
+  in_rect.x = max(r1.x, r2.x);
+  in_rect.width = min(r1.x + r1.width, r2.x + r2.width) - in_rect.x;
+  in_rect.y = max(r1.y, r2.y);
+  in_rect.height = min(r1.y + r1.height, r2.y + r2.height) - in_rect.y;
+
+  return in_rect;
 }
 
 //You should not need to modify any code below this line
